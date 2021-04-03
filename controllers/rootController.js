@@ -3,30 +3,25 @@
 
 function generatePasswords(req, res) {
   const { minlength, nuOfSpecialChar, nuOfnumbers, nuOfpasswords } = req.body;
-  console.log("req.body", req.body);
+  // console.log("req.body", req.body);
   let passwords = [];
   // let passwordLength = 4 + nuOfSpecialChar + nuOfnumbers; // 4 for Capital letter and small letter
   try {
     if (isNaN(minlength)) {
-      res
-        .status(401)
-        .json(
-          "You passed invalid entry."
-        );
+      res.status(401).json("You passed invalid entry.");
     } else if (minlength < 6 || minlength > 128) {
-      res
-        .status(402)
-        .json(
-          "Password Length must be 6-128 characters."
-        );
-    }
-    else if (
+      res.status(402).json("Password Length must be 6-128 characters.");
+    } else if (
       !minlength &&
       !nuOfnumbers &&
       !nuOfSpecialChar &&
       !nuOfpasswords
     ) {
-      res.status(400).send(" Enter a valid URL, pass like this example: http://localhost:5500/api/generate/passwords/v1/"); // Bad Request
+      res
+        .status(400)
+        .send(
+          " Enter a valid URL, pass like this example: http://localhost:5500/api/generate/passwords/v1/"
+        ); // Bad Request
     }
     const numberChars = "0123456789";
     const upperChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -62,26 +57,40 @@ function generatePasswords(req, res) {
       }
       randPassword =
         resultCharUp + resultCharLow + resultCharSpe + resultNumber;
-      passwords.push(randPassword);
+      const newRand = randomString(randPassword);
+      passwords.push(newRand);
     }
-     if (passwords) {
-     res.status(200).json(passwords);
-  } else {
-    res.json("no passowrds generated");
-  }
+    if (passwords) {
+      res.status(200).json(passwords);
+    } else {
+      res.json("no passowrds generated");
+    }
   } catch (error) {
     console.log(" error", error);
-    // res.status(500).json({ message: "Something went wrong, could not fetch passwords." });
+    res
+      .status(500)
+      .json({ message: "Something went wrong, could not fetch passwords." });
   }
-  console.log({ passwords });
 }
-
-// const getPasswords = async (req, res) => {
-//   console.log({ result: req.payload });
-//   // res.send(passwords);
-//   res.status(200).send([req.payload]);
-// };
-
+function randomString(string) {
+  const array = string.split(""); // change atring to array
+  let currentIndex = array.length,
+    temporaryValue,
+    randomIndex;
+  while (currentIndex !== 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+  // return array to string
+  let newStr = "";
+  for (let i = 0; i < array.length; i++) {
+    newStr += array[i];
+  }
+  return newStr;
+}
 module.exports = {
   generatePasswords,
 };
