@@ -11,9 +11,16 @@ function generatePasswords(req, res) {
       res
         .status(401)
         .json(
-          "Password Length must be 6-128 characters or you passed invalid entry."
+          "You passed invalid entry."
         );
-    } else if (
+    } else if (minlength < 6 || minlength > 128) {
+      res
+        .status(402)
+        .json(
+          "Password Length must be 6-128 characters."
+        );
+    }
+    else if (
       !minlength &&
       !nuOfnumbers &&
       !nuOfSpecialChar &&
