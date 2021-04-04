@@ -1,28 +1,28 @@
 // Constants with Ascii code characters.
 // http://www.asciitable.com/
-
+function willcomeToMyApp(req, res) {
+  res.send("Password generator app");
+}
 function generatePasswords(req, res) {
   const { minlength, nuOfSpecialChar, nuOfnumbers, nuOfpasswords } = req.body;
-  // console.log("req.body", req.body);
-  let passwords = [];
-  // let passwordLength = 4 + nuOfSpecialChar + nuOfnumbers; // 4 for Capital letter and small letter
+  // length for Capital letters and small letters
+  const rest = Number(nuOfSpecialChar) + Number(nuOfnumbers);
+  let restLetters = Number(minlength) - Number(rest); // 4 for Capital letter and small letter
   try {
     if (isNaN(minlength)) {
       res.status(401).json("You passed invalid entry.");
-    } else if (minlength < 6 || minlength > 128) {
-      res.status(402).json("Password Length must be 6-128 characters.");
+    }
+    if (minlength < 6 || minlength > 128) {
+      res.status(403).json("Password Length must be 6-128 characters.");
     } else if (
       !minlength &&
       !nuOfnumbers &&
       !nuOfSpecialChar &&
       !nuOfpasswords
     ) {
-      res
-        .status(400)
-        .send(
-          " Enter a valid URL, pass like this example: http://localhost:5500/api/generate/passwords/v1/"
-        ); // Bad Request
+      res.status(400).send("Please fill in all entries"); // Bad Request
     }
+    let passwords = []; // array to return all passwords
     const numberChars = "0123456789";
     const upperChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     const lowerChars = "abcdefghijklmnopqrstuvwxyz";
@@ -35,14 +35,19 @@ function generatePasswords(req, res) {
           Math.floor(Math.random() * numberChars.length)
         );
       }
-      resultCharUp = "";
-      randLength1 = Math.floor(Math.random() * 10);
+      // add randum amount of capital and small leters
+      let resultCharUp = "";
+      do {
+        randLength1 = Math.floor(Math.random() * minlength);
+      } while (randLength1 < restLetters / 2);
       for (let i = 0; i < randLength1; i++) {
         resultCharUp += upperChars.charAt(
           Math.floor(Math.random() * upperChars.length)
         );
       }
-      randLength2 = Math.floor(Math.random() * 10);
+      do {
+        randLength2 = Math.floor(Math.random() * minlength);
+      } while (randLength2 < restLetters / 2);
       resultCharLow = "";
       for (let i = 0; i < randLength2; i++) {
         resultCharLow += lowerChars.charAt(
@@ -60,16 +65,15 @@ function generatePasswords(req, res) {
       const newRand = randomString(randPassword);
       passwords.push(newRand);
     }
-    if (passwords) {
+    if (passwords && minlength >= 6 && minlength <= 128) {
       res.status(200).json(passwords);
-    } else {
-      res.json("no passowrds generated");
     }
   } catch (error) {
     console.log(" error", error);
-    res
-      .status(500)
-      .json({ message: "Something went wrong, could not fetch passwords." });
+
+    // res
+    //   .status(500)
+    //   .json({ message: "Something went wrong, could not fetch passwords." });
   }
 }
 function randomString(string) {
@@ -93,4 +97,5 @@ function randomString(string) {
 }
 module.exports = {
   generatePasswords,
+  willcomeToMyApp,
 };

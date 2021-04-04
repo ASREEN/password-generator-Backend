@@ -6,4 +6,8 @@ router.
 route('/api/generate/passwords/v1').
 post( passwordController.generatePasswords);
 
+router.
+route('/').
+get( passwordController.willcomeToMyApp);
+
 module.exports = router;
