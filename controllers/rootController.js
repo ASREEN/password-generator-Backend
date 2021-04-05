@@ -1,5 +1,4 @@
-// Constants with Ascii code characters.
-// http://www.asciitable.com/
+
 function willcomeToMyApp(req, res) {
   res.send("Password generator app");
 }
