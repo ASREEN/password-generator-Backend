@@ -62,9 +62,12 @@ function generatePasswords(req, res) {
       randPassword =
         resultCharUp + resultCharLow + resultCharSpe + resultNumber;
       const newRand = randomString(randPassword);
+      if (passwords && minlength >= 6 && minlength <= 128) {
       passwords.push(newRand);
+      }
     }
-    if (passwords && minlength >= 6 && minlength <= 128) {
+    if (passwords) {
+      // console.log({passwords})
       res.status(200).json(passwords);
     }
   } catch (error) {
