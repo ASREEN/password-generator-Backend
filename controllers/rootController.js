@@ -1,15 +1,20 @@
-
 function willcomeToMyApp(req, res) {
-  res.send("Password generator app");
+  res.status(200).send("Password generator app");
 }
 function generatePasswords(req, res) {
+  console.log({ body: req.body });
   const { minlength, nuOfSpecialChar, nuOfnumbers, nuOfpasswords } = req.body;
   // length for Capital letters and small letters
   const rest = Number(nuOfSpecialChar) + Number(nuOfnumbers);
-  let restLetters = Number(minlength) - Number(rest); // 4 for Capital letter and small letter
+  let restLetters = Number(minlength) - Number(rest);
   try {
-    if (isNaN(minlength)) {
-      res.status(401).json("You passed invalid entry.");
+    console.log(isNaN(minlength), isNaN(nuOfSpecialChar), isNaN(nuOfnumbers), isNaN(nuOfpasswords))
+    if (
+      !minlength ||
+      !nuOfSpecialChar ||
+      !nuOfnumbers ||
+      !nuOfpasswords) {
+      res.status(401).json("Fill all enteries. You passed empty or invalid entries.");
     }
     if (minlength < 6 || minlength > 128) {
       res.status(403).json("Password Length must be 6-128 characters.");
@@ -63,11 +68,10 @@ function generatePasswords(req, res) {
         resultCharUp + resultCharLow + resultCharSpe + resultNumber;
       const newRand = randomString(randPassword);
       if (passwords && minlength >= 6 && minlength <= 128) {
-      passwords.push(newRand);
+        passwords.push(newRand);
       }
     }
     if (passwords) {
-      // console.log({passwords})
       res.status(200).json(passwords);
     }
   } catch (error) {
