@@ -85,7 +85,7 @@ describe("/GET  all passwords", () => {
       .end((err, res) => {
         should.not.exist(err);
         should.exist(res); // note that u should check for res existance
-        // res.should.have.status(200);
+        res.should.have.status(200);
         done();
       });
   });
@@ -95,7 +95,7 @@ describe("/GET  all passwords", () => {
     nuOfnumbers: 2,
     nuOfpasswords: 4,
   };
-  it("should return status 200 ", (done) => {
+  it("should return status 200 2 test ", (done) => {
     assert.isAbove(body.minLength, 5, 'minlength is strictly greater than 5');
     chai
       .request("http://localhost:5500")
