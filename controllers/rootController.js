@@ -24,12 +24,12 @@ function generatePasswords(req, res) {
     } else if (minlength < 6 || minlength > 128) {
       res.status(403).json("Password Length must be 6-128 characters.");
     } else if (
-      !minlength &&
-      !nuOfnumbers &&
-      !nuOfSpecialChar &&
-      !nuOfpasswords
+      isNaN(minlength)||
+      isNaN(nuOfSpecialChar) ||
+      isNaN(nuOfnumbers) ||
+      isNaN(nuOfpasswords)
     ) {
-      res.status(400).send("Please fill in all entries"); // Bad Request
+      res.status(400).send("All entries must to be a number"); // Bad Request
     } else {
       let passwords = []; // array to return all passwords
       const numberChars = "0123456789";
