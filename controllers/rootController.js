@@ -8,7 +8,6 @@ function generatePasswords(req, res) {
   const rest = Number(nuOfSpecialChar) + Number(nuOfnumbers);
   let restLetters = Number(minlength) - Number(rest);
   try {
-    // console.log(isNaN(minlength), isNaN(nuOfSpecialChar), isNaN(nuOfnumbers), isNaN(nuOfpasswords))
     if (
       !minlength ||
       !nuOfSpecialChar ||
@@ -16,6 +15,7 @@ function generatePasswords(req, res) {
       !nuOfnumbers ||
       nuOfnumbers < 1 ||
       nuOfpasswords < 1 ||
+      // nuOfpasswords > 100 ||
       !nuOfpasswords
     ) {
       res
@@ -23,8 +23,10 @@ function generatePasswords(req, res) {
         .json("Fill all enteries. You passed empty or invalid entries.");
     } else if (minlength < 6 || minlength > 128) {
       res.status(403).json("Password Length must be 6-128 characters.");
+    } else if (nuOfpasswords > 100) {
+      res.status(400).json("Number of passwords is maximal 100.");
     } else if (
-      isNaN(minlength)||
+      isNaN(minlength) ||
       isNaN(nuOfSpecialChar) ||
       isNaN(nuOfnumbers) ||
       isNaN(nuOfpasswords)
@@ -86,12 +88,12 @@ function generatePasswords(req, res) {
     }
   } catch (error) {
     console.log(" error", error);
-
-    // res
-    //   .status(500)
-    //   .json({ message: "Something went wrong, could not fetch passwords." });
+    res
+      .status(500)
+      .json({ message: "Something went wrong, could not fetch passwords." });
   }
 }
+// make mixing for the password 
 function randomString(string) {
   const array = string.split(""); // change atring to array
   let currentIndex = array.length,
